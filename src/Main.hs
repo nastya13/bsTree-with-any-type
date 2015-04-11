@@ -2,22 +2,16 @@ module Main where
 
 
 --------------------------------------------------------------
-data BStree a = BNil | Node { value :: a 
-                          , bstl :: BStree a
-                          , bstr :: BStree a
-                          }  deriving (Show)
+data BStree a = BNil | Node { value :: a, bstl :: BStree a, bstr :: BStree a }  deriving (Show)
 --Interp. Binary search tree
 
 empty_tree :: BStree a
 empty_tree = BNil
 
 
---treeEqNil :: BStree a -> BStree a -> Bool
---treeEq empty_tree empty_tree = True 
---treeEq (/empty_tree) empty_tree = False
+
 instance (Eq a) => Eq (BStree a) where
 	(Node val bl br)    == (Node val1 bl1 br1) = (val  == val1)
-    --(Node val' bl' br') == empty_tree          = (val' == null) 
  
 
 
@@ -40,18 +34,12 @@ high_of_bstree :: BStree a -> Int
 high_of_bstree BNil = 0
 high_of_bstree bst = 1 + max (high_of_bstree (bstl bst)) (high_of_bstree (bstr bst))
 
---let 
-                     --   go bst' count = if bst' == empty_tree 
-                      --                  then count
-                      --                else go (bstl bst') count+1
-                    -- in go bst (if bst == empty_tree then 0 else 1)
 
---tmap :: (BStree a) -> (a -> b) -> (BStree b)
-
-
---x (genBStree (filter (<x) xs))
---(genBStree (filter (>x) xs))
+tmap :: (BStree a) -> (a -> b) -> (BStree b)
+tmap BNil operation = BNil
+tmap (Node v br bl) operation = (Node (operation v) (tmap br operation) (tmap bl operation)) 
 
 
 
-main = print (high_of_bstree (genBStree ["0","1","2","3","4","5","6","7"]))
+
+main = print (tmap (genBStree ["0","1","2","3","4","5","6","7"]) ("new" ++))
